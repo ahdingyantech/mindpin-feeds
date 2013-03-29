@@ -71,7 +71,6 @@ describe MindpinFeeds do
 
   describe Question do
     before{
-      p User
       @user = User.create!(:name => 'user')
       @user_1 = User.create!(:name => 'user_1')
     }
