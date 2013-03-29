@@ -1,0 +1,6 @@
+test:
+  adapter: mysql2
+  database: mindpin-feeds-test
+  encoding: utf8
+  username: root
+  password: root
