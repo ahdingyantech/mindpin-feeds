@@ -1,5 +1,6 @@
 require 'mindpin_feeds/callbacks_methods'
 require 'mindpin_feeds/feed'
+require 'mindpin_feeds/feed_like'
 
 module MindpinFeeds
   module Base

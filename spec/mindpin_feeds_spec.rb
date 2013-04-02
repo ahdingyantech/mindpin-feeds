@@ -312,5 +312,61 @@ describe MindpinFeeds do
       MindpinFeeds::Feed.to(@answer_2).all.count.should == 2
     }
   end
+
+  describe '点赞' do
+    before{
+      @creator = User.create!(:name => 'creator')
+      @user_1  = User.create!(:name => 'user_1')
+      @user_2  = User.create!(:name => 'user_2')
+      Question.create(:name => "question_1", :creator => @creator)
+      Question.create(:name => "question_2", :creator => @creator)
+      
+      feeds = MindpinFeeds::Feed.by_user(@creator)
+      @feed_1 = feeds[0]
+      @feed_2 = feeds[1]
+    }
+
+    it{
+      @feed_1.like_count.should == 0
+    }
+
+    it{
+      @feed_1.like_by?(@user_1).should == false
+    }
+
+    it{
+      @feed_1.like_by?(@user_2).should == false
+    }
+
+    context '点赞' do
+      before{
+        @feed_1.liked(@user_1)
+      }
+
+      it{
+        @feed_1.like_count.should == 1
+      }
+
+      it{
+        @feed_1.like_by?(@user_1).should == true
+      }
+      context '取消点赞' do
+        before{
+          @feed_1.cancel_like(@user_1)
+        }
+
+        it{
+          @feed_1.like_count.should == 0
+        }
+
+        it{
+          @feed_1.like_by?(@user_1).should == false
+        }
+      end
+
+      context '复杂情况' do
+      end
+    end
+  end
 end
 
