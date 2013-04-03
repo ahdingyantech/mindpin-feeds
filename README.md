@@ -49,12 +49,23 @@ end
 
 
 # 查询
+```ruby
+MindpinFeeds::Feed.on_scene(:sui_bian_xie
+MindpinFeeds::Feed.on_what(:create_answer).all
+MindpinFeeds::Feed.on_what(:update_answer).all
+MindpinFeeds::Feed.on_what(:destroy_answer).all
+MindpinFeeds::Feed.by_user(@user).all
+MindpinFeeds::Feed.to(@answer).all
 ```
-Feed.on_scene(:sui_bian_xie
-Feed.on_what(:create_answer).all
-Feed.on_what(:update_answer).all
-Feed.on_what(:destroy_answer).all
-Feed.by_user(@user).all
-Feed.to(@answer).all
+
+# 赞
+```ruby
+feed = MindpinFeeds::Feed.last
+feed.like_count
+feed.liked(user)
+feed.cancel_like(user)
+feed.like_by?(user)
+```
+
 ```
 
