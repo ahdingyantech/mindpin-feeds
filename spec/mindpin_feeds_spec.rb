@@ -368,5 +368,23 @@ describe MindpinFeeds do
       end
     end
   end
+
+  describe 'without_feed' do
+    before{
+      @user = User.create!(:name => 'user')
+      @question = Question.create!(:name => 'question', :creator => @user)
+    }
+
+    it{
+      MindpinFeeds::Feed.on_scene(:questions).all.count.should == 1
+    }
+
+    it{
+      @question.without_feed do
+        @question.destroy
+      end
+      MindpinFeeds::Feed.on_scene(:questions).all.count.should == 1
+    }
+  end
 end
 

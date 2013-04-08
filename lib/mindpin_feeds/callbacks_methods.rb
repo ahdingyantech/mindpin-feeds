@@ -13,6 +13,8 @@ module MindpinFeeds
     end
 
     def __set_feed_on_commit(callback_name)
+      return true if self.without_feed_flag
+
       MindpinFeeds::Feed.create :who => self.creator,
                 :scene => self.class.record_feed_scene,
                 :to => self,
