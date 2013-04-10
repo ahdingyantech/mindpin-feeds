@@ -47,6 +47,15 @@ class Answer < ActiveRecord::Base
 end
 ```
 
+# 跳过 feed 创建
+```ruby
+answer = Answer.last
+
+answer.without_feed do
+  answer.update_attributes(:content => "blanblanblan改")
+end
+```
+
 
 # 查询
 ```ruby
