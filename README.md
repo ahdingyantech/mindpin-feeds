@@ -4,8 +4,10 @@ mindpin-feeds
 # 配置
 
 ```
+# Gemfile
 gem 'mindpin-feeds',
-    :git => 'git://github.com/mindpin/mindpin-feeds'
+    :git => 'git://github.com/mindpin/mindpin-feeds',
+    :tag => '0.0.1'
 ```
 
 
