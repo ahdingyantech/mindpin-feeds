@@ -386,5 +386,59 @@ describe MindpinFeeds do
       MindpinFeeds::Feed.on_scene(:questions).all.count.should == 1
     }
   end
+
+  describe '不连续给同一个用户创建相同的 feed' do
+    before{
+      @user = User.create!(:name => 'user')
+      @answer = Answer.create!(:name => "answer_1", :creator => @user)
+    }
+
+    it{
+      MindpinFeeds::Feed.by_user(@user).all.count.should == 1
+    }
+
+    context '第一次修改 answer' do
+      before{
+        @answer.name = 'answer_gai_1'
+        @answer.save
+      }
+
+      it{
+        MindpinFeeds::Feed.by_user(@user).all.count.should == 2
+      }
+
+      context '第二次修改 answer' do
+        before{
+          @answer.name = 'answer_gai_2'
+          @answer.save
+        }
+
+        it{
+          MindpinFeeds::Feed.by_user(@user).all.count.should == 2
+        }
+
+        context '做其他操作' do
+          before{
+            Answer.create!(:name => "answer_2", :creator => @user)
+          }
+
+          it{
+            MindpinFeeds::Feed.by_user(@user).all.count.should == 3
+          }
+
+          context '第三次修改 answer' do
+            before{
+              @answer.name = 'answer_gai_3'
+              @answer.save
+            }
+
+            it{
+              MindpinFeeds::Feed.by_user(@user).all.count.should == 4
+            }
+          end
+        end
+      end
+    end
+  end
 end
 

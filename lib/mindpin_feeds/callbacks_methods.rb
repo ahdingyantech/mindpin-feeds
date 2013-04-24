@@ -16,7 +16,7 @@ module MindpinFeeds
       return true if self.without_feed_flag
 
       MindpinFeeds::Feed.create :who => self.creator,
-                :scene => self.class.record_feed_scene,
+                :scene => self.class.record_feed_scene.to_s,
                 :to => self,
                 :what => "#{callback_name}_#{self.class.to_s.downcase}"
     end

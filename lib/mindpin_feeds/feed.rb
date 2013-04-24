@@ -12,7 +12,22 @@ module MindpinFeeds
     scope :by_user,  lambda {|user|  { :conditions => ['user_id = ?', user.id] }  }
     scope :to,       lambda {|to|    { :conditions => ['to_type = ? and to_id = ?', to.class.name, to.id] }  }
 
+    default_scope :order => 'id desc'
+
     has_many :feed_likes
+
+    validate :validate_repeat_feed
+    def validate_repeat_feed
+      newest_feed = MindpinFeeds::Feed.by_user(self.who).first
+      return true if newest_feed.blank?
+      bool_1 = (newest_feed.who == self.who)
+      bool_2 = (newest_feed.scene == self.scene)
+      bool_3 = (newest_feed.to == self.to)
+      bool_4 = (newest_feed.what == self.what)
+      if bool_1 && bool_2 && bool_3 && bool_4
+        errors.add(:base,'重复的 feed')
+      end
+    end
 
     def like_count
       self.feed_likes.count
