@@ -15,10 +15,20 @@ module MindpinFeeds
     def __set_feed_on_commit(callback_name)
       return true if self.without_feed_flag
 
-      MindpinFeeds::Feed.create :who => self.creator,
+      if self.respond_to?(:creator)
+        user = self.creator
+      elsif self.respond_to?(:user)
+        user = self.user
+      end
+
+      MindpinFeeds::Feed.create :who => user,
                 :scene => self.class.record_feed_scene.to_s,
                 :to => self,
                 :what => "#{callback_name}_#{self.class.to_s.downcase}"
+      rescue Exception => ex
+        p "警告: #{self.class} feed 创建失败"
+        puts ex.message
+        puts ex.backtrace*"\n"
     end
   end
 end
