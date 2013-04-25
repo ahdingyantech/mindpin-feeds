@@ -24,7 +24,7 @@ module MindpinFeeds
       MindpinFeeds::Feed.create :who => user,
                 :scene => self.class.record_feed_scene.to_s,
                 :to => self,
-                :what => "#{callback_name}_#{self.class.to_s.downcase}"
+                :what => "#{callback_name}_#{self.class.to_s.underscore}"
       rescue Exception => ex
         p "警告: #{self.class} feed 创建失败"
         puts ex.message

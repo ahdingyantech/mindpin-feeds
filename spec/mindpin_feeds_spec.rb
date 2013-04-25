@@ -27,6 +27,19 @@ class AnswerMigration < ActiveRecord::Migration
   end
 end
 
+class AnswerVoteMigration < ActiveRecord::Migration
+  def self.up
+    create_table :answer_votes, :force => true do |t|
+      t.string :name
+      t.integer :user_id
+    end
+  end
+
+  def self.down
+    drop_table :answer_votes
+  end
+end
+
 class UserMigration < ActiveRecord::Migration
   def self.up
     create_table :users, :force => true do |t|
@@ -51,6 +64,12 @@ class Answer < ActiveRecord::Base
               :callbacks => [ :create, :update]
 end
 
+class AnswerVote < ActiveRecord::Base
+  belongs_to :user
+  record_feed :scene => :answer_votes,
+              :callbacks => [ :create, :update]
+end
+
 class User < ActiveRecord::Base
 end
 
@@ -60,6 +79,7 @@ describe MindpinFeeds do
     AnswerMigration.up
     UserMigration.up
     MindpinFeedsMigration.up
+    AnswerVoteMigration.up
   }
 
   after(:all){
@@ -67,6 +87,7 @@ describe MindpinFeeds do
     AnswerMigration.down
     UserMigration.down
     MindpinFeedsMigration.down
+    AnswerVoteMigration.down
   }
 
   describe Question do
@@ -439,6 +460,21 @@ describe MindpinFeeds do
         end
       end
     end
+  end
+
+  describe AnswerVote do
+    before{
+      @user = User.create!(:name => "user_1")
+      AnswerVote.create!(:name => "answer_vote", :user => @user)
+    }
+
+    it{
+      MindpinFeeds::Feed.on_what(:create_answer_vote).all.count.should == 1
+    }
+
+    it{
+      MindpinFeeds::Feed.by_user(@user).all.count.should == 1
+    }
   end
 end
 
