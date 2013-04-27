@@ -1,7 +1,7 @@
 require 'spec_helper.rb'
 
 class AnswerVoteIf < ActiveRecord::Base
-  set_table_name 'answer_votes'
+  self.table_name = 'answer_votes'
   UP = 'UP'
   DOWN = 'DOWN'
   belongs_to :user

@@ -26,14 +26,19 @@ module MindpinFeeds
         user = self.user
       end
 
-      MindpinFeeds::Feed.create :who => user,
+      feed = MindpinFeeds::Feed.create :who => user,
                 :scene => self.class.record_feed_scene.to_s,
                 :to => self,
                 :what => "#{callback_name}_#{self.class.to_s.underscore}"
-      rescue Exception => ex
-        p "警告: #{self.class} feed 创建失败"
-        puts ex.message
-        puts ex.backtrace*"\n"
+
+      if !feed.id.blank? && self.class.record_feed_after_feed_create.is_a?(Proc)
+        proc = self.class.record_feed_after_feed_create
+        proc.call(feed)
+      end
+    rescue Exception => ex
+      p "警告: #{self.class} feed 创建失败"
+      puts ex.message
+      puts ex.backtrace*"\n"
     end
   end
 end
