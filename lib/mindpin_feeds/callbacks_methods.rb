@@ -15,8 +15,9 @@ module MindpinFeeds
     def __set_feed_on_commit(callback_name)
       return true if self.without_feed_flag
 
-      if self.class.record_feed_if.is_a?(Proc)
-        bool = self.class.record_feed_if.call(self, callback_name.to_sym)
+      proc = self.class.record_feed_before_record_feed
+      if proc.is_a?(Proc)
+        bool = proc.call(self, callback_name.to_sym)
         return true if !bool
       end
 
@@ -31,10 +32,6 @@ module MindpinFeeds
                 :to => self,
                 :what => "#{callback_name}_#{self.class.to_s.underscore}"
 
-      if !feed.id.blank? && self.class.record_feed_after_feed_create.is_a?(Proc)
-        proc = self.class.record_feed_after_feed_create
-        proc.call(feed)
-      end
     rescue Exception => ex
       p "警告: #{self.class} feed 创建失败"
       puts ex.message

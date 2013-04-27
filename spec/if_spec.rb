@@ -7,8 +7,8 @@ class AnswerVoteIf < ActiveRecord::Base
   belongs_to :user
   record_feed :scene => :answer_votes,
               :callbacks => [ :create, :update],
-              :if => lambda {|vote, callback_type|
-                vote.kind == UP && callback_type == :create
+              :before_record_feed => lambda {|vote, callback_type|
+                return vote.kind == UP && callback_type == :create
               }
 end
 

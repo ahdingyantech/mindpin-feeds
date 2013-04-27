@@ -7,14 +7,15 @@ class AnswerVoteAfterFeedCreate < ActiveRecord::Base
   belongs_to :user
   record_feed :scene => :answer_votes,
               :callbacks => [ :create, :update],
-              :after_feed_create => lambda {|feed|
-                if feed.to.kind == DOWN
-                  MindpinFeeds::Feed.destroy_all
+              :before_record_feed => lambda {|vote, callback_type|
+                if vote.kind == DOWN
+                  MindpinFeeds::Feed.destroy_all 
+                  return false
                 end
+                return true
               }
 end
 
-################333
 describe 'feed 创建回调' do
   before{
     @user = User.create!(:name => "user_1")
