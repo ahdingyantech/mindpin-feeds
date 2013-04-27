@@ -13,9 +13,10 @@ module MindpinFeeds
       def record_feed(options)
         scene = options[:scene] || self.name.downcase.pluralize
         callbacks = options[:callbacks] || [ :create, :update, :destroy]
-
+        if_lambda = options[:if]
         self.class_variable_set(:@@record_feed_scene, scene) 
         self.class_variable_set(:@@record_feed_callbacks, callbacks)
+        self.class_variable_set(:@@record_feed_if, if_lambda)
 
         self.send(:include, CallbacksMethods)
         self.send(:include, WithoutFeedMethods)
@@ -39,6 +40,10 @@ module MindpinFeeds
 
       def record_feed_callbacks
         self.class_variable_get(:@@record_feed_callbacks)
+      end
+
+      def record_feed_if
+        self.class_variable_get(:@@record_feed_if)
       end
     end
   end

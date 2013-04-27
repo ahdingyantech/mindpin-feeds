@@ -28,6 +28,7 @@ class AnswerVoteMigration < ActiveRecord::Migration
   def self.up
     create_table :answer_votes, :force => true do |t|
       t.string :name
+      t.string :kind
       t.integer :user_id
     end
   end

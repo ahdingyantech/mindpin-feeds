@@ -15,6 +15,11 @@ module MindpinFeeds
     def __set_feed_on_commit(callback_name)
       return true if self.without_feed_flag
 
+      if self.class.record_feed_if.is_a?(Proc)
+        bool = self.class.record_feed_if.call(self, callback_name.to_sym)
+        return true if !bool
+      end
+
       if self.respond_to?(:creator)
         user = self.creator
       elsif self.respond_to?(:user)
