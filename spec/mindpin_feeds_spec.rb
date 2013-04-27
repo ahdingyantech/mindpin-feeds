@@ -1,57 +1,5 @@
 require 'spec_helper.rb'
 
-
-class QuestionMigration < ActiveRecord::Migration
-  def self.up
-    create_table :questions, :force => true do |t|
-      t.string :name
-      t.integer :creator_id
-    end
-  end
-
-  def self.down
-    drop_table :questions
-  end
-end
-
-class AnswerMigration < ActiveRecord::Migration
-  def self.up
-    create_table :answers, :force => true do |t|
-      t.string :name
-      t.integer :creator_id
-    end
-  end
-
-  def self.down
-    drop_table :answers
-  end
-end
-
-class AnswerVoteMigration < ActiveRecord::Migration
-  def self.up
-    create_table :answer_votes, :force => true do |t|
-      t.string :name
-      t.integer :user_id
-    end
-  end
-
-  def self.down
-    drop_table :answer_votes
-  end
-end
-
-class UserMigration < ActiveRecord::Migration
-  def self.up
-    create_table :users, :force => true do |t|
-      t.string :name
-    end
-  end
-
-  def self.down
-    drop_table :users
-  end
-end
-
 class Question < ActiveRecord::Base
   belongs_to :creator, :class_name => 'User'
   record_feed :scene => :questions,
@@ -64,31 +12,7 @@ class Answer < ActiveRecord::Base
               :callbacks => [ :create, :update]
 end
 
-class AnswerVote < ActiveRecord::Base
-  belongs_to :user
-  record_feed :scene => :answer_votes,
-              :callbacks => [ :create, :update]
-end
-
-class User < ActiveRecord::Base
-end
-
 describe MindpinFeeds do
-  before(:all){
-    QuestionMigration.up
-    AnswerMigration.up
-    UserMigration.up
-    MindpinFeedsMigration.up
-    AnswerVoteMigration.up
-  }
-
-  after(:all){
-    QuestionMigration.down
-    AnswerMigration.down
-    UserMigration.down
-    MindpinFeedsMigration.down
-    AnswerVoteMigration.down
-  }
 
   describe Question do
     before{
@@ -462,19 +386,5 @@ describe MindpinFeeds do
     end
   end
 
-  describe AnswerVote do
-    before{
-      @user = User.create!(:name => "user_1")
-      AnswerVote.create!(:name => "answer_vote", :user => @user)
-    }
-
-    it{
-      MindpinFeeds::Feed.on_what(:create_answer_vote).all.count.should == 1
-    }
-
-    it{
-      MindpinFeeds::Feed.by_user(@user).all.count.should == 1
-    }
-  end
 end
 
