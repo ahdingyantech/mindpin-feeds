@@ -1,5 +1,6 @@
 require 'mindpin_feeds/callbacks_methods'
 require 'mindpin_feeds/without_feed_methods'
+require 'mindpin_feeds/instance_methods'
 require 'mindpin_feeds/feed'
 require 'mindpin_feeds/feed_like'
 
@@ -21,6 +22,7 @@ module MindpinFeeds
 
         self.send(:include, CallbacksMethods)
         self.send(:include, WithoutFeedMethods)
+        self.send(:include, InstanceMethods)
 
         if record_feed_callbacks.include?(:create)
           self.send(:after_create, :set_feed_on_create)
