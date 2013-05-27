@@ -3,7 +3,7 @@ require 'spec_helper.rb'
 class Question < ActiveRecord::Base
   belongs_to :creator, :class_name => 'User'
   record_feed :scene => :questions,
-              :callbacks => [ :create, :destroy]
+              :callbacks => [ :create]
 end
 
 class Answer < ActiveRecord::Base
@@ -70,37 +70,6 @@ describe MindpinFeeds do
           MindpinFeeds::Feed.on_what(:update_question).all.count.should == 0
         }
 
-        context '删除 question' do
-          before{ @question.destroy }
-
-          it{
-            MindpinFeeds::Feed.on_scene(:questions).all.count.should == 2
-          }
-
-          it{
-            MindpinFeeds::Feed.on_what(:create_question).all.count.should == 1
-          }
-
-          it{
-            MindpinFeeds::Feed.on_what(:update_question).all.count.should == 0
-          }
-
-          it{
-            MindpinFeeds::Feed.on_what(:destroy_question).all.count.should == 1
-          }
-
-          it{
-            MindpinFeeds::Feed.by_user(@user).all.count.should == 2
-          }
-
-          it{
-            MindpinFeeds::Feed.by_user(@user_1).all.count.should == 0
-          }
-
-          it{
-            MindpinFeeds::Feed.to(@question).all.count.should == 2
-          }
-        end
       end
 
 
@@ -187,11 +156,7 @@ describe MindpinFeeds do
           }
 
           it{
-            MindpinFeeds::Feed.on_scene(:sui_bian_xie).all.count.should == 2
-          }
-
-          it{
-            MindpinFeeds::Feed.on_what(:destroy_answer).all.count.should == 0
+            MindpinFeeds::Feed.on_scene(:sui_bian_xie).all.count.should == 0
           }
         end
       end
@@ -217,14 +182,11 @@ describe MindpinFeeds do
 
       @answer_2.name = "answer_2_gai"
       @answer_2.save!
-
-      @question.destroy
-      @answer_1.destroy
     }
 
     # on_scene
     it{
-      MindpinFeeds::Feed.on_scene(:questions).all.count.should == 2
+      MindpinFeeds::Feed.on_scene(:questions).all.count.should == 1
     }
 
     it{
@@ -235,24 +197,22 @@ describe MindpinFeeds do
     it{
       MindpinFeeds::Feed.on_what(:create_question).all.count.should == 1
       MindpinFeeds::Feed.on_what(:update_question).all.count.should == 0
-      MindpinFeeds::Feed.on_what(:destroy_question).all.count.should == 1
     }
 
     it{
       MindpinFeeds::Feed.on_what(:create_answer).all.count.should == 2
       MindpinFeeds::Feed.on_what(:update_answer).all.count.should == 2
-      MindpinFeeds::Feed.on_what(:destroy_answer).all.count.should == 0
     }
 
     it{
-      MindpinFeeds::Feed.by_user(@user).all.count.should == 2
+      MindpinFeeds::Feed.by_user(@user).all.count.should == 1
       MindpinFeeds::Feed.by_user(@user_1).all.count.should == 2
       MindpinFeeds::Feed.by_user(@user_2).all.count.should == 2
     }
 
 
     it{
-      MindpinFeeds::Feed.to(@question).all.count.should == 2
+      MindpinFeeds::Feed.to(@question).all.count.should == 1
       MindpinFeeds::Feed.to(@answer_1).all.count.should == 2
       MindpinFeeds::Feed.to(@answer_2).all.count.should == 2
     }
@@ -317,18 +277,20 @@ describe MindpinFeeds do
   describe 'without_feed' do
     before{
       @user = User.create!(:name => 'user')
-      @question = Question.create!(:name => 'question', :creator => @user)
+      @answer = Answer.create!(:name => "answer_1", :creator => @user)
     }
 
     it{
-      MindpinFeeds::Feed.on_scene(:questions).all.count.should == 1
+      MindpinFeeds::Feed.by_user(@user).all.count.should == 1
     }
 
+
     it{
-      @question.without_feed do
-        @question.destroy
+      @answer.without_feed do
+        @answer.name = 'answer_gai_1'
+        @answer.save
       end
-      MindpinFeeds::Feed.on_scene(:questions).all.count.should == 1
+      MindpinFeeds::Feed.by_user(@user).all.count.should == 1
     }
   end
 
