@@ -25,6 +25,8 @@ module MindpinFeeds
         user = self.creator
       elsif self.respond_to?(:user)
         user = self.user
+      elsif self.class.name == 'User'
+        user = self
       end
 
       feed = MindpinFeeds::Feed.create :who => user,
