@@ -10,10 +10,10 @@ module MindpinFeeds
 
     module ClassMethods
         # record_feed :scene => :questions,
-        #       :callbacks => [ :create, :destroy]
+        #       :callbacks => [ :create ]
       def record_feed(options)
         scene = options[:scene] || self.name.downcase.pluralize
-        callbacks = options[:callbacks] || [ :create, :update, :destroy]
+        callbacks = options[:callbacks] || [ :create, :update ]
         before_record_feed = options[:before_record_feed]
 
         self.class_variable_set(:@@record_feed_scene, scene) 
@@ -32,9 +32,6 @@ module MindpinFeeds
           self.send(:after_update, :set_feed_on_update)
         end
 
-        if record_feed_callbacks.include?(:destroy)
-          self.send(:after_destroy, :set_feed_on_destroy)
-        end
       end
 
       def record_feed_scene

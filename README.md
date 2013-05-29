@@ -45,7 +45,7 @@ end
 class Answer < ActiveRecord::Base
   
   record_feed :scene => :sui_bian_xie,
-              :callbacks => [ :create, :update, :destroy]
+              :callbacks => [ :create, :update ]
 end
 ```
 
@@ -64,7 +64,6 @@ end
 MindpinFeeds::Feed.on_scene(:sui_bian_xie
 MindpinFeeds::Feed.on_what(:create_answer).all
 MindpinFeeds::Feed.on_what(:update_answer).all
-MindpinFeeds::Feed.on_what(:destroy_answer).all
 MindpinFeeds::Feed.by_user(@user).all
 MindpinFeeds::Feed.to(@answer).all
 ```
