@@ -20,9 +20,13 @@ describe User do
     expect {
       @user.name = 'user_1_gai'
       @user.save!
+      @user.name = 'user_1_gai'
+      @user.save!
+      @user.name = 'user_1_gai1'
+      @user.save!
     }.to change{
       MindpinFeeds::Feed.count
-    }.by(1)
-    MindpinFeeds::Feed.last.data.should == 'user_1_gai'
+    }.by(2)
+    MindpinFeeds::Feed.first.data.should == 'user_1_gai1'
   }
 end

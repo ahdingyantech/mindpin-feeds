@@ -24,7 +24,8 @@ module MindpinFeeds
       bool_2 = (newest_feed.scene == self.scene)
       bool_3 = (newest_feed.to == self.to)
       bool_4 = (newest_feed.what == self.what)
-      if bool_1 && bool_2 && bool_3 && bool_4
+      bool_5 = (newest_feed.data == self.data)
+      if bool_1 && bool_2 && bool_3 && bool_4 && bool_5
         errors.add(:base,'重复的 feed')
       end
     end
