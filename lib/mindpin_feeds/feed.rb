@@ -1,6 +1,6 @@
 module MindpinFeeds
   class Feed < ActiveRecord::Base
-    attr_accessible :who, :scene, :to, :what
+    attr_accessible :who, :scene, :to, :what, :data
 
     validates :who, :scene, :to, :what, :presence => true
 

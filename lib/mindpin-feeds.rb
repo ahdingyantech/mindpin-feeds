@@ -15,10 +15,12 @@ module MindpinFeeds
         scene = options[:scene] || self.name.downcase.pluralize
         callbacks = options[:callbacks] || [ :create, :update ]
         before_record_feed = options[:before_record_feed]
+        set_feed_data      = options[:set_feed_data]
 
         self.class_variable_set(:@@record_feed_scene, scene) 
         self.class_variable_set(:@@record_feed_callbacks, callbacks)
         self.class_variable_set(:@@record_feed_before_record_feed, before_record_feed)
+        self.class_variable_set(:@@record_feed_set_feed_data, set_feed_data)
 
         self.send(:include, CallbacksMethods)
         self.send(:include, WithoutFeedMethods)
@@ -44,6 +46,10 @@ module MindpinFeeds
 
       def record_feed_before_record_feed
         self.class_variable_get(:@@record_feed_before_record_feed)
+      end
+
+      def record_feed_set_feed_data
+        self.class_variable_get(:@@record_feed_set_feed_data)
       end
 
     end

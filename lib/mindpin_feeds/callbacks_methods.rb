@@ -17,6 +17,13 @@ module MindpinFeeds
         return true if !bool
       end
 
+      proc = self.class.record_feed_set_feed_data
+      if proc.is_a?(Proc)
+        data = proc.call(self, callback_name.to_sym)
+      else
+        data = nil
+      end
+
       if self.respond_to?(:creator)
         user = self.creator
       elsif self.respond_to?(:user)
@@ -28,6 +35,7 @@ module MindpinFeeds
       feed = MindpinFeeds::Feed.create :who => user,
                 :scene => self.class.record_feed_scene.to_s,
                 :to => self,
+                :data => data,
                 :what => "#{callback_name}_#{self.class.to_s.underscore}"
 
     rescue Exception => ex

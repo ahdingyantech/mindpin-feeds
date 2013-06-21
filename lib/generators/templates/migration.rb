@@ -8,6 +8,7 @@ class MindpinFeedsMigration < ActiveRecord::Migration
       t.string :to_type
 
       t.string :what
+      t.text :data
       t.timestamps
     end
 
