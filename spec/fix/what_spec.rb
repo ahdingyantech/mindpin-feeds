@@ -1,5 +1,9 @@
 require 'spec_helper.rb'
-class AnswerVote < ActiveRecord::Base
+class AnswerVote
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+  field :name,      :type => String
   belongs_to :user
   record_feed :scene => :answer_votes,
               :callbacks => [ :create, :update]

@@ -7,42 +7,16 @@ mindpin-feeds
 # Gemfile
 gem 'mindpin-feeds',
     :git => 'git://github.com/mindpin/mindpin-feeds',
-    :tag => '0.0.1'
+    :tag => '1.0.1'
 ```
 
-
-# 增加 migration
-```ruby
-class MindpinFeedsMigration < ActiveRecord::Migration
-  def self.up
-    create_table :feeds do |t|
-      t.integer :user_id
-      t.string  :scene
-
-      t.integer :to_id
-      t.string :to_type
-
-      t.string :what
-      t.timestamps
-    end
-    
-    create_table :feed_likes do |t|
-      t.integer :user_id
-      t.integer :feed_id
-      t.timestamps
-    end
-  end
-
-  def self.down
-    drop_table :feeds
-    drop_table :feed_likes
-  end
-end
-```
 
 # 增加声明
 ```ruby
-class Answer < ActiveRecord::Base
+class Answer
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
   
   record_feed :scene => :sui_bian_xie,
               :callbacks => [ :create, :update ]

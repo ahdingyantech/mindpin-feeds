@@ -1,7 +1,10 @@
 require 'spec_helper.rb'
 
-class QuestionDependent < ActiveRecord::Base
-  self.table_name = 'questions'
+class QuestionDependent
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+  field :name,      :type => String
   belongs_to :creator, :class_name => 'User'
   record_feed :scene => :questions,
               :callbacks => [ :create ]

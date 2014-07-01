@@ -1,12 +1,22 @@
 require 'spec_helper.rb'
 
-class Question < ActiveRecord::Base
+class Question
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+
+  field :name,      :type => String
   belongs_to :creator, :class_name => 'User'
   record_feed :scene => :questions,
               :callbacks => [ :create]
 end
 
-class Answer < ActiveRecord::Base
+class Answer
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+
+  field :name,      :type => String
   belongs_to :creator, :class_name => 'User'
   record_feed :scene => :sui_bian_xie,
               :callbacks => [ :create, :update]

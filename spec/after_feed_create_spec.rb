@@ -1,9 +1,13 @@
 require 'spec_helper.rb'
 
-class AnswerVoteAfterFeedCreate < ActiveRecord::Base
-  self.table_name = 'answer_votes'
+class AnswerVoteAfterFeedCreate
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
   UP = 'UP'
   DOWN = 'DOWN'
+  field :name,      :type => String
+  field :kind,      :type => String
   belongs_to :user
   record_feed :scene => :answer_votes,
               :callbacks => [ :create, :update],

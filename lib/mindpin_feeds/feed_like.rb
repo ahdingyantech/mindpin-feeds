@@ -1,6 +1,7 @@
 module MindpinFeeds
-  class FeedLike < ActiveRecord::Base
-    attr_accessible :user, :feed
+  class FeedLike
+    include Mongoid::Document
+    include Mongoid::Timestamps
 
     validates :user, :feed, :presence => true
     validates :user_id, :uniqueness => {:scope => :feed_id}
@@ -8,6 +9,6 @@ module MindpinFeeds
     belongs_to :user
     belongs_to :feed
 
-    scope :by_user, lambda {|user| {:conditions => ['user_id = ?',user.id]} }
+    scope :by_user, ->(user) { where(:user_id => user.id) }
   end
 end

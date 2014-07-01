@@ -1,0 +1,12 @@
+development:
+  sessions:
+    default:
+      database: mindpin-feeds_dev
+      hosts:
+        - 192.168.1.4:27017
+test:
+  sessions:
+    default:
+      database: mindpin-feeds_test
+      hosts:
+        - 192.168.1.4:27017

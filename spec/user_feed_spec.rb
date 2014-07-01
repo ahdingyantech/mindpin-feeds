@@ -1,7 +1,10 @@
 require 'spec_helper.rb'
 
-class User < ActiveRecord::Base
-  self.table_name = 'users'
+class User
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+
   record_feed :scene => :users,
               :callbacks => [ :update ],
               :set_feed_data => lambda{|user, callback_type|

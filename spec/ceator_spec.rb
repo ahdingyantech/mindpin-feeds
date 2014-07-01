@@ -1,14 +1,20 @@
 require 'spec_helper.rb'
 
-class AnswerVoteAddCeator < ActiveRecord::Base
-  self.table_name = 'answer_votes'
+class AnswerVoteAddCeator
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+  field :name,      :type => String
   belongs_to :user
   record_feed :scene => :answer_votes,
               :callbacks => [ :create, :update]
 end
 
-class AnswerVoteUnAddCeator < ActiveRecord::Base
-  self.table_name = 'answer_votes'
+class AnswerVoteUnAddCeator
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include MindpinFeeds::RecordFeed
+  field :name,      :type => String
   belongs_to :user
   record_feed :scene => :answer_votes,
               :callbacks => [ :create, :update]

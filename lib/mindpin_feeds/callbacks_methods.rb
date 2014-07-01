@@ -32,11 +32,18 @@ module MindpinFeeds
         user = self
       end
 
-      feed = MindpinFeeds::Feed.create :who => user,
+      feed = MindpinFeeds::Feed.new :who => user,
                 :scene => self.class.record_feed_scene.to_s,
-                :to => self,
+                :to_type => self.class.name,
+                :to_id   => self.id,
+                # 使用 to 赋值会出现级联save feed -> self -> feed
+                # :to      => self,
                 :data => data,
                 :what => "#{callback_name}_#{self.class.to_s.underscore}"
+
+      if MindpinFeeds::Feed.validate_repeat_feed(feed)
+        feed.save(:skip_callbacks => true)
+      end
 
     rescue Exception => ex
       p "警告: #{self.class} feed 创建失败"

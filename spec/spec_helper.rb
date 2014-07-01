@@ -1,41 +1,22 @@
 # -*- encoding : utf-8 -*-
-require 'coveralls'
-Coveralls.wear!
-
-require 'mysql2'
-require 'active_record'
-require 'active_support/all'
+require "bundler"
+Bundler.setup(:default)
+require 'mongoid'
+ENV['RACK_ENV'] = 'test'
+Mongoid.load!(File.expand_path("../mongoid.yml",__FILE__))
 require 'mindpin-feeds'
-
-require 'config/db_init'
-require 'generators/templates/migration'
-
-require 'migrations'
-require 'models'
-
 require 'database_cleaner'
+require 'models'
+Bundler.require(:test)
+
 RSpec.configure do |config|
-  config.order = "random"
 
-  # database_cleaner
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
+  config.before :each do
+    DatabaseCleaner[:mongoid].strategy = :truncation
+    DatabaseCleaner[:mongoid].start
   end
 
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
-  end
-
-  config.before(:all) do
-    MigrationHelper.up
-  end
-
-  config.after(:all) do
-    MigrationHelper.down
+  config.after :each do
+    DatabaseCleaner[:mongoid].clean
   end
 end
